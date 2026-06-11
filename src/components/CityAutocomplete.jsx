@@ -26,7 +26,7 @@ const CityAutocomplete = ({ onCitySelect, isLoading }) => {
 
     if (value.trim().length > 0) {
       const filtered = cambodiaCities.filter((city) =>
-        city.toLowerCase().startsWith(value.toLowerCase()),
+        city.toLowerCase().includes(value.toLowerCase()),
       );
       setSuggestions(filtered.slice(0, 8));
       setShowSuggestions(true);
@@ -76,7 +76,6 @@ const CityAutocomplete = ({ onCitySelect, isLoading }) => {
   return (
     <div ref={wrapperRef} className="relative w-full max-w-2xl">
       <div className="flex w-full">
-        {/* Input with Location Icon */}
         <div className="relative flex-1">
           <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">
             <svg
@@ -110,8 +109,6 @@ const CityAutocomplete = ({ onCitySelect, isLoading }) => {
             disabled={isLoading}
           />
         </div>
-
-        {/* Search Button */}
         <button
           onClick={handleSearch}
           disabled={isLoading}
@@ -135,9 +132,8 @@ const CityAutocomplete = ({ onCitySelect, isLoading }) => {
         </button>
       </div>
 
-      {/* Error Message */}
       {errorMessage && (
-        <div className="mt-3 p-3 bg-red-100 border border-red-400 text-red-700 rounded-xl text-center animate-pulse shadow-md flex items-center justify-center gap-2">
+        <div className="mt-3 p-3 bg-red-100 border border-red-400 text-red-700 rounded-xl text-center shadow-md flex items-center justify-center gap-2">
           <svg
             className="w-5 h-5"
             fill="none"
@@ -156,7 +152,6 @@ const CityAutocomplete = ({ onCitySelect, isLoading }) => {
         </div>
       )}
 
-      {/* Suggestions Dropdown */}
       {showSuggestions && suggestions.length > 0 && !errorMessage && (
         <ul className="absolute z-20 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-xl max-h-80 overflow-auto">
           {suggestions.map((city, index) => (
