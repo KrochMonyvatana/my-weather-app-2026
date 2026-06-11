@@ -25,8 +25,9 @@ const CityAutocomplete = ({ onCitySelect, isLoading }) => {
     setErrorMessage("");
 
     if (value.trim().length > 0) {
+      // ONLY show cities that START WITH the typed letters (not contains)
       const filtered = cambodiaCities.filter((city) =>
-        city.toLowerCase().includes(value.toLowerCase()),
+        city.toLowerCase().startsWith(value.toLowerCase()),
       );
       setSuggestions(filtered.slice(0, 8));
       setShowSuggestions(true);
@@ -51,6 +52,7 @@ const CityAutocomplete = ({ onCitySelect, isLoading }) => {
       return;
     }
 
+    // Check if the searched city exists (case-insensitive)
     const cityExists = cambodiaCities.some(
       (city) => city.toLowerCase() === searchTerm.toLowerCase(),
     );
