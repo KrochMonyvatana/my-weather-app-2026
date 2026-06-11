@@ -9,6 +9,8 @@ const Favorites = () => {
   ]);
   const [favoriteWeather, setFavoriteWeather] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
+  const [hoveredCity, setHoveredCity] = useState(null);
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -24,6 +26,7 @@ const Favorites = () => {
       }
       setFavoriteWeather(results);
       setLoading(false);
+      setInitialLoadDone(true);
     };
     fetchFavorites();
   }, [favorites]);
@@ -63,9 +66,14 @@ const Favorites = () => {
     return "from-blue-700 via-blue-600 to-indigo-700";
   };
 
+  // Don't show anything while loading on first visit
+  if (loading && !initialLoadDone) {
+    return null;
+  }
+
   return (
     <div className="rounded-2xl shadow-2xl overflow-hidden">
-      {/* Header Banner with rgba(255, 255, 255, 0.3) color */}
+      {/* Header Banner */}
       <div
         className="px-6 py-3"
         style={{
@@ -95,7 +103,8 @@ const Favorites = () => {
           </div>
           <button
             onClick={addFavorite}
-            className="bg-white/20 text-white px-4 py-1.5 rounded-lg flex items-center gap-1 text-sm border border-white/30"
+            className="bg-white/20 text-white px-4 py-1.5 rounded-lg flex items-center gap-1 text-sm border border-white/30 hover:bg-white/30 transition-all duration-200"
+            title="Add a new city to your favorites list"
           >
             <svg
               className="w-4 h-4"
@@ -118,12 +127,7 @@ const Favorites = () => {
 
       {/* Content Area */}
       <div className="p-5 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-        {loading ? (
-          <div className="text-center py-12 text-white/60">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white mr-2"></div>
-            Loading favorites...
-          </div>
-        ) : favoriteWeather.length === 0 ? (
+        {favoriteWeather.length === 0 ? (
           <div className="text-center py-12 text-white/60">
             <p className="text-lg">No favorite cities yet.</p>
             <p className="text-sm mt-2">
@@ -135,12 +139,13 @@ const Favorites = () => {
             {favoriteWeather.map((weather, index) => {
               const weatherCondition = weather?.weather[0]?.description || "";
               const gradientClass = getCardGradient(weatherCondition);
+              const isHovered = hoveredCity === weather.name;
 
               return (
                 weather && (
                   <div
                     key={index}
-                    className={`bg-gradient-to-br ${gradientClass} rounded-xl overflow-hidden shadow-lg border border-white/20`}
+                    className={`bg-gradient-to-br ${gradientClass} rounded-xl overflow-hidden shadow-lg border border-white/20 transition-all duration-200 relative`}
                   >
                     {/* Weather Condition Banner */}
                     <div className="bg-white/10 backdrop-blur-sm px-3 py-1.5 border-b border-white/20">
@@ -173,16 +178,27 @@ const Favorites = () => {
                             {Math.round(weather.main.temp)}°C
                           </p>
                         </div>
-                        <button
-                          onClick={() => removeFavorite(weather.name)}
-                          className="bg-white/20 text-white rounded-full w-7 h-7 flex items-center justify-center text-xs font-bold"
-                          title="Remove from favorites"
-                        ></button>
+                        <div className="relative">
+                          <button
+                            onClick={() => removeFavorite(weather.name)}
+                            onMouseEnter={() => setHoveredCity(weather.name)}
+                            onMouseLeave={() => setHoveredCity(null)}
+                            className="bg-white/20 hover:bg-red-500/80 text-white rounded-full w-7 h-7 flex items-center justify-center text-xs font-bold transition-all duration-200 cursor-pointer"
+                          >
+                            ✕
+                          </button>
+                          {/* Tooltip */}
+                          {isHovered && (
+                            <div className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap z-20 shadow-lg border border-white/20">
+                              Remove {weather.name} from favorites
+                            </div>
+                          )}
+                        </div>
                       </div>
 
                       <div className="mt-3 pt-2 border-t border-white/20">
                         <div className="flex gap-4">
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-1 group relative">
                             <svg
                               className="w-3.5 h-3.5 text-white/70"
                               fill="none"
@@ -209,8 +225,12 @@ const Favorites = () => {
                               </p>
                               <p className="text-[10px] opacity-70">Humidity</p>
                             </div>
+                            {/* Tooltip for humidity */}
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-20 border border-white/20">
+                              Current humidity level
+                            </div>
                           </div>
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-1 group relative">
                             <svg
                               className="w-3.5 h-3.5 text-white/70"
                               fill="none"
@@ -230,6 +250,10 @@ const Favorites = () => {
                                 {Math.round(weather.wind.speed)} m/s
                               </p>
                               <p className="text-[10px] opacity-70">Wind</p>
+                            </div>
+                            {/* Tooltip for wind */}
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-20 border border-white/20">
+                              Current wind speed
                             </div>
                           </div>
                         </div>

@@ -9,7 +9,6 @@ function App() {
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
-    // Trigger animation when route changes
     setIsAnimating(true);
     const timer = setTimeout(() => {
       setIsAnimating(false);
@@ -27,31 +26,24 @@ function App() {
     >
       <div className="min-h-screen bg-black bg-opacity-40">
         <div className="container mx-auto px-4 py-6 max-w-7xl">
-          {/* Header Section - Fixed, No Animation */}
+          {/* Header Section */}
           <div className="text-center mb-8">
+            {/* Cambodia Flag Video - No hover effect, default cursor */}
             <div className="flex justify-center mb-4">
-              <div className="bg-white/10 backdrop-blur-md rounded-full p-4 shadow-xl border border-white/20">
-                <svg
-                  className="w-12 h-12 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                  />
-                </svg>
-              </div>
+              <video
+                src="/cambodia-flag.mp4"
+                className="w-24 h-24 md:w-28 md:h-28 object-cover rounded-full shadow-2xl"
+                autoPlay
+                loop
+                muted
+                playsInline
+                style={{
+                  border: "none",
+                  outline: "none",
+                  cursor: "default",
+                  pointerEvents: "none",
+                }}
+              />
             </div>
 
             <h1 className="text-5xl md:text-6xl font-bold mb-3">
@@ -106,7 +98,7 @@ function App() {
             </div>
           </div>
 
-          {/* Navigation Bar - Fixed, No Animation */}
+          {/* Navigation Bar */}
           <nav className="flex justify-center gap-3 mb-10">
             <Link
               to="/"
@@ -182,7 +174,7 @@ function App() {
             </Link>
           </nav>
 
-          {/* Content Section - Slides up from below when clicked */}
+          {/* Content Section */}
           <div className="min-h-[500px] overflow-hidden">
             <div
               className={`transform transition-all duration-500 ease-out ${
@@ -199,9 +191,9 @@ function App() {
             </div>
           </div>
 
-          {/* Footer - Fixed, No Animation */}
+          {/* Footer */}
           <div className="text-center text-white/40 text-xs mt-10 pt-6 border-t border-white/10">
-            <p>© 2024 Weather Cambodia | Powered by OpenWeatherMap</p>
+            <p>© 2026 Weather Cambodia | Powered by OpenWeatherMap</p>
           </div>
         </div>
       </div>

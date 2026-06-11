@@ -49,9 +49,9 @@ const About = () => {
             </div>
           </div>
 
-          {/* Features */}
+          {/* Features - No icon */}
           <div className="flex items-start gap-3">
-            <span className="text-2xl">📍</span>
+            <div className="w-8"></div>
             <div>
               <h3 className="font-bold text-lg mb-1 text-white">Features</h3>
               <ul className="list-disc list-inside space-y-1 ml-4 text-white/70">
@@ -66,9 +66,9 @@ const About = () => {
             </div>
           </div>
 
-          {/* Technologies Used */}
+          {/* Technologies Used - No icon */}
           <div className="flex items-start gap-3">
-            <span className="text-2xl">🔧</span>
+            <div className="w-8"></div>
             <div>
               <h3 className="font-bold text-lg mb-1 text-white">
                 Technologies Used
@@ -83,23 +83,16 @@ const About = () => {
             </div>
           </div>
 
-          {/* Data Source */}
+          {/* Data Source - No icon */}
           <div className="flex items-start gap-3">
-            <span className="text-2xl">📡</span>
+            <div className="w-8"></div>
             <div>
               <h3 className="font-bold text-lg mb-1 text-white">Data Source</h3>
-              <p className="text-white/70">
-                All weather data is provided by OpenWeatherMap, updated in
-                real-time from their global weather API.
-              </p>
+              <ul className="list-disc list-inside space-y-1 ml-4 text-white/70">
+                <li>All weather data is provided by OpenWeatherMap</li>
+                <li>Updated in real-time from their global weather API</li>
+              </ul>
             </div>
-          </div>
-
-          {/* Footer */}
-          <div className="text-center mt-6 pt-4 border-t border-white/20">
-            <p className="text-sm text-white/50">
-              © 2024 Weather Cambodia | Built with ❤️ for school project
-            </p>
           </div>
         </div>
       </div>

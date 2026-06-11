@@ -12,7 +12,7 @@ import {
 const WeatherHome = () => {
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetchWeatherData = async (city) => {
@@ -32,12 +32,12 @@ const WeatherHome = () => {
     }
   };
 
-  const getUserLocation = () => {
+  const getUserLocation = async () => {
+    setLoading(true);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
-          setLoading(true);
           try {
             const [weatherData, forecastData] = await Promise.all([
               getWeatherByCoords(latitude, longitude),
@@ -47,14 +47,19 @@ const WeatherHome = () => {
             setForecast(forecastData);
           } catch (err) {
             setError("Could not fetch weather for your location.");
+            fetchWeatherData("Phnom Penh");
           } finally {
             setLoading(false);
           }
         },
-        () => fetchWeatherData("Phnom Penh"),
+        () => {
+          fetchWeatherData("Phnom Penh");
+          setLoading(false);
+        },
       );
     } else {
       fetchWeatherData("Phnom Penh");
+      setLoading(false);
     }
   };
 
@@ -63,17 +68,20 @@ const WeatherHome = () => {
   }, []);
 
   return (
-    <div className="animate-fadeInSlow">
-      {/* Search Section */}
+    <div>
+      {/* Search Section - Always visible */}
       <div className="flex justify-center mb-8">
         <CityAutocomplete onCitySelect={fetchWeatherData} isLoading={loading} />
       </div>
 
-      {/* Loading State */}
+      {/* Loading State - Simple spinner only */}
       {loading && (
-        <div className="text-center text-white text-xl py-12">
-          <div className="inline-block animate-spin-slow rounded-full h-12 w-12 border-b-2 border-white mr-3"></div>
-          <p>Loading weather data...</p>
+        <div className="flex flex-col items-center justify-center py-20">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-white/20 rounded-full"></div>
+            <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
+          </div>
+          <p className="text-white/70 text-sm mt-4">Loading weather data...</p>
         </div>
       )}
 
@@ -84,56 +92,13 @@ const WeatherHome = () => {
         </div>
       )}
 
-      {/* Weather Content */}
+      {/* Weather Content - Only shows when data is ready */}
       {!loading && weather && (
-        <div className="space-y-8 animate-slideUpSlow">
+        <div className="space-y-8">
           <WeatherCard weather={weather} />
           <Forecast forecast={forecast} />
         </div>
       )}
-
-      <style>{`
-        @keyframes fadeInSlow {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-        
-        @keyframes slideUpSlow {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        @keyframes spin-slow {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-        
-        .animate-fadeInSlow {
-          animation: fadeInSlow 1s ease-out;
-        }
-        
-        .animate-slideUpSlow {
-          animation: slideUpSlow 0.8s ease-out;
-        }
-        
-        .animate-spin-slow {
-          animation: spin-slow 1.5s linear infinite;
-        }
-      `}</style>
     </div>
   );
 };
